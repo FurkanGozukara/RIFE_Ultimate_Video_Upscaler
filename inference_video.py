@@ -97,6 +97,13 @@ parser.add_argument('--multi', dest='multi', type=int, default=2)
 parser.add_argument('--no-audio', dest='no_audio', action='store_true', help='Skip audio transfer even if source video has audio')
 # New argument to show ffmpeg output
 parser.add_argument('--show-ffmpeg', dest='show_ffmpeg', action='store_true', help='Show ffmpeg encoding output')
+parser.add_argument('--video-codec', dest='video_codec', type=str, default='libx264', help='FFmpeg video codec for output encoding (e.g. libx264, libx265, libsvtav1)')
+parser.add_argument('--video-preset', dest='video_preset', type=str, default='slow', help='FFmpeg preset for video encoding')
+parser.add_argument('--video-crf', dest='video_crf', type=int, default=10, help='FFmpeg CRF value for video encoding quality')
+parser.add_argument('--pixel-format', dest='pixel_format', type=str, default='yuv420p', help='FFmpeg pixel format for output encoding')
+parser.add_argument('--h265-tune', dest='h265_tune', type=str, default='none', help='Optional x265 tune (none, grain, psnr, ssim, fastdecode, zerolatency, animation)')
+parser.add_argument('--av1-film-grain', dest='av1_film_grain', type=int, default=8, help='SVT-AV1 film grain strength (0-50)')
+parser.add_argument('--av1-film-grain-denoise', dest='av1_film_grain_denoise', type=int, default=0, choices=[0, 1], help='SVT-AV1 film-grain-denoise flag (0 or 1)')
 
 args = parser.parse_args()
 if args.exp != 1:
@@ -113,6 +120,36 @@ if args.img is not None:
 
 # Set ffmpeg output flag
 show_ffmpeg_output = args.show_ffmpeg
+args.video_codec = str(args.video_codec or "libx264").strip() or "libx264"
+args.video_preset = str(args.video_preset or "slow").strip() or "slow"
+args.pixel_format = str(args.pixel_format or "yuv420p").strip() or "yuv420p"
+args.h265_tune = str(args.h265_tune or "none").strip().lower() or "none"
+if args.h265_tune not in {"none", "grain", "psnr", "ssim", "fastdecode", "zerolatency", "animation"}:
+    args.h265_tune = "none"
+try:
+    args.video_crf = int(args.video_crf)
+except Exception:
+    args.video_crf = 10
+args.video_crf = max(0, min(63, int(args.video_crf)))
+try:
+    args.av1_film_grain = int(args.av1_film_grain)
+except Exception:
+    args.av1_film_grain = 8
+args.av1_film_grain = max(0, min(50, int(args.av1_film_grain)))
+args.av1_film_grain_denoise = bool(int(args.av1_film_grain_denoise))
+
+
+def apply_codec_tuning(ffmpeg_cmd):
+    codec_norm = str(args.video_codec or "").strip().lower()
+    if codec_norm == "libx265" and args.h265_tune != "none":
+        ffmpeg_cmd.extend(["-tune", args.h265_tune])
+    if codec_norm in {"libsvtav1", "libaom-av1"}:
+        ffmpeg_cmd.extend(
+            [
+                "-svtav1-params",
+                f"film-grain={int(args.av1_film_grain)}:film-grain-denoise={1 if args.av1_film_grain_denoise else 0}",
+            ]
+        )
 
 # =============================================================================
 # Setup device and model
@@ -305,6 +342,11 @@ else:
     # Estimate the actual high FPS based on source FPS and multiplier
     actual_high_fps = fps * args.multi # Calculate the actual high FPS
     print(f" Initial encoding to: {os.path.basename(vid_out_name_temp_highfps)} [{w}x{h}@{actual_high_fps:.2f}fps]")
+    print(
+        f"[INFO] Encoder settings: codec={args.video_codec}, preset={args.video_preset}, "
+        f"crf={args.video_crf}, pix_fmt={args.pixel_format}, h265_tune={args.h265_tune}, "
+        f"av1_film_grain={args.av1_film_grain}, av1_film_grain_denoise={int(args.av1_film_grain_denoise)}"
+    )
     
     # First ffmpeg command: Encode raw frames to high-FPS intermediate file
     ffmpeg_cmd_1 = [
@@ -316,12 +358,13 @@ else:
         '-r', str(actual_high_fps), # <<< Set the correct high framerate for the input pipe
         '-i', '-',  # input from pipe
         '-an', # No audio for this intermediate step
-        '-vcodec', 'libx264',
-        '-preset', 'slow', # Faster preset for temp file is okay
-        '-crf', '10', # Slightly lower quality for temp file is okay
-        '-pix_fmt', 'yuv420p',
-        vid_out_name_temp_highfps # Output to temporary high-FPS file
+        '-c:v', args.video_codec,
+        '-preset', args.video_preset,
+        '-crf', str(args.video_crf),
+        '-pix_fmt', args.pixel_format,
     ]
+    apply_codec_tuning(ffmpeg_cmd_1)
+    ffmpeg_cmd_1.append(vid_out_name_temp_highfps) # Output to temporary high-FPS file
     # Use DEVNULL for stdout/stderr if not showing FFmpeg output
     ffmpeg_stdout = None if show_ffmpeg_output else subprocess.DEVNULL
     ffmpeg_stderr = None if show_ffmpeg_output else subprocess.DEVNULL
@@ -603,13 +646,14 @@ if not args.png:
                 'ffmpeg', '-y',
                 '-i', vid_out_name_temp_highfps, # Input is the high-FPS temp file
                 '-r', str(target_fps), # Apply the target frame rate (exact value)
-                '-c:v', 'libx264',
-                '-preset', 'slow', # Use original slower preset for final quality
-                '-crf', '10', # Use original CRF for final quality
-                '-pix_fmt', 'yuv420p',
+                '-c:v', args.video_codec,
+                '-preset', args.video_preset,
+                '-crf', str(args.video_crf),
+                '-pix_fmt', args.pixel_format,
                 '-an', # No audio yet
-                vid_out_name # Output to the final video name
             ]
+            apply_codec_tuning(ffmpeg_cmd_2)
+            ffmpeg_cmd_2.append(vid_out_name) # Output to the final video name
             re_encode_successful = False
             try:
                 # Run the second ffmpeg process
