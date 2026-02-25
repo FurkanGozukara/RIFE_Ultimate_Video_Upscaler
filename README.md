@@ -1,129 +1,130 @@
-# Practical-RIFE 
-**[V4.0 Anime Demo Video](https://www.bilibili.com/video/BV1J3411t7qT?p=1&share_medium=iphone&share_plat=ios&share_session_id=7AE3DA72-D05C-43A0-9838-E2A80885BD4E&share_source=QQ&share_tag=s_i&timestamp=1639643780&unique_k=rjqO0EK)** | **[迭代经验](https://zhuanlan.zhihu.com/p/721430631)** | **[迭代QA](https://github.com/hzwer/Practical-RIFE/issues/124)** | **[Colab](https://colab.research.google.com/drive/1BZmGSq15O4ZU5vPfzkv7jFNYahTm6qwT?usp=sharing)**
+# Made for SECourses Premium Members : https://www.patreon.com/posts/150202809
 
-This project is based on [RIFE](https://github.com/hzwer/arXiv2020-RIFE) and [SAFA](https://github.com/megvii-research/WACV2024-SAFA). We aim to enhance their practicality for users by incorporating various features and designing new models. Since improving the PSNR index is not consistent with subjective perception. This project is intended for engineers and developers. For general users, we recommend the following software:
+## Download Link : https://www.patreon.com/posts/150202809
 
-**[SVFI (中文)](https://github.com/YiWeiHuang-stack/Squirrel-Video-Frame-Interpolation) | [RIFE-App](https://grisk.itch.io/rife-app) | [FlowFrames](https://nmkd.itch.io/flowframes)**
+## 4K NEWER TUTORIAL : https://youtu.be/_WT4C78j5-c
 
-Thanks to [SVFI team](https://github.com/Justin62628/Squirrel-RIFE) to support model testing on Animation. 
+[![Watch the video](https://img.youtube.com/vi/_WT4C78j5-c/maxresdefault.jpg)](https://youtu.be/_WT4C78j5-c)
 
-[VapourSynth-RIFE](https://github.com/HolyWu/vs-rife) | [RIFE-ncnn-vulkan](https://github.com/nihui/rife-ncnn-vulkan) | [VapourSynth-RIFE-ncnn-Vulkan](https://github.com/styler00dollar/VapourSynth-RIFE-ncnn-Vulkan) | [vs-mlrt](https://github.com/AmusementClub/vs-mlrt) | [Drop frame fixer and FPS converter](https://github.com/may-son/RIFE-FixDropFrames-and-ConvertFPS)
+## 4K HD Tutorial : https://www.youtube.com/watch?v=bPWsg8DREiM
 
-## Frame Interpolation
-2024.08 - We find that 4.24+ is quite suitable for post-processing of [some diffusion model generated videos](https://drive.google.com/drive/folders/1hSzUn10Era3JCaVz0Z5Eg4wT9R6eJ9U9?usp=sharing).
+### SECourses Ultimate Video and Image Upscaler Pro - SeedVR2 - FlashVSR+ - Face Restoration - Gan Upscalers - Queue System - Fully Automated Movie Restoration and Upscale Studio
 
-### Trained Model
-The content of these links is under the same MIT license as this project. **lite** means using similar training framework, but lower computational cost model.
-Currently, it is recommended to choose 4.25 by default for most scenes.
+#### It has been long waited to have a studio level video and image upscaler app. Today we have publishing the version 1.0 of SECourses Ultimate Video and Image Upscaler Pro. It is supporting SeedVR2, FlashVSR+, Gan based upscalers, RIFE frame interpolation, full queue system, full batch folder processing, scene / chunked based processing and many more. It is fully working on every cloud and consumer GPUs like RTX 2000, 3000, 4000, 5000 series and H100, H200, B200, RTX PRO 6000. We are installing app with latest Torch and CUDA versions atm all fully automatic with pre-compiled libraries. Even Torch compile is fully and automatically working.
 
-4.26 - 2024.09.21 | [Google Drive](https://drive.google.com/file/d/1gViYvvQrtETBgU1w8axZSsr7YUuw31uy/view?usp=sharing) [百度网盘](https://pan.baidu.com/s/1EZsG3IFO8C1e2uRVb_Npgg?pwd=smw8) || [4.26.heavy](https://drive.google.com/file/d/1vJy82jub1D9O8BZgjPeMu3HHx4bG-NY1/view?usp=sharing) || [4.25.lite - 2024.10.20](https://drive.google.com/file/d/1zlKblGuKNatulJNFf5jdB-emp9AqGK05/view?usp=share_link) 
+#### Download Link : https://www.patreon.com/posts/150202809
 
-4.25 - 2024.09.19 | [Google Drive](https://drive.google.com/file/d/1ZKjcbmt1hypiFprJPIKW0Tt0lr_2i7bg/view?usp=sharing) [百度网盘](https://pan.baidu.com/s/1rpUX5uawusz2uwEdXtjRbw?pwd=mo6k) | I am trying using more flow blocks, so the scale_list will change accordingly. It seems that the anime scenes have been significantly improved.
+Here are the links sorted in numerical order:
 
-4.22 - 2024.08.08 | [Google Drive](https://drive.google.com/file/d/1qh2DSA9a1eZUTtZG9U9RQKO7N7OaUJ0_/view?usp=share_link)  [百度网盘](https://pan.baidu.com/s/1EA5BIHqOu35Rj4meg00G4g?pwd=hwym) || [4.22.lite](https://drive.google.com/file/d/1Smy6gY7BkS_RzCjPCbMEy-TsX8Ma5B0R/view?usp=sharing) || 4.21 - 2024.08.04 | [Google Drive](https://drive.google.com/file/d/1l5u6G8vEkPAT7cYYWwzB6OG8vwBYrxiS/view?usp=sharing) [百度网盘](https://pan.baidu.com/s/1TMjRFOwdLgsShKdGbTKW_g?pwd=4q6d)
+![1](https://github.com/user-attachments/assets/23c996d4-4fb5-4fda-adae-11feed4980d9)
+![02](https://github.com/user-attachments/assets/07a0c8de-c9c7-4d08-9fbf-0326b24987c4)
+![2](https://github.com/user-attachments/assets/d4264f4a-fd27-40be-9830-6e519aa26e2a)
+![3](https://github.com/user-attachments/assets/1b7332a2-fabd-45df-87a1-79be418a6b44)
+![4](https://github.com/user-attachments/assets/f0881a38-34ee-47fe-8b52-fae93b90059e)
+![5](https://github.com/user-attachments/assets/059c42bc-7331-4202-ad24-aeb1b4de52df)
+![6](https://github.com/user-attachments/assets/a2549ec5-e887-4d50-b60e-4270f45f378a)
+![7](https://github.com/user-attachments/assets/8ed131ca-941c-4843-aefa-7c08d90a4bdb)
+![8](https://github.com/user-attachments/assets/f9b7d639-b8db-42bb-898d-62cb4323fca8)
+![9](https://github.com/user-attachments/assets/de690274-ea08-4564-bf13-31270923ea6d)
+![10](https://github.com/user-attachments/assets/f8bbfa0a-ff36-4734-9da7-3d45e625f746)
+![11](https://github.com/user-attachments/assets/ae196c0a-0421-496c-94e5-262364f4db82)
+![12](https://github.com/user-attachments/assets/1cf4af56-f66c-43c8-8f1e-1c607983112e)
+![13](https://github.com/user-attachments/assets/3574dde3-dc5d-4307-ba19-40e1ec71e0fd)
 
-4.20 - 2024.07.24 | [Google Drive](https://drive.google.com/file/d/11n3YR7-qCRZm9RDdwtqOTsgCJUHPuexA/view?usp=sharing) [百度网盘](https://pan.baidu.com/s/1v0b7ZTSj_VvLOfW-hQ_NZQ?pwd=ykkv)
-|| 4.18 - 2024.07.03 | [Google Drive](https://drive.google.com/file/d/1octn-UVuEjXa_HlsIUbNeLTTvYCKbC_s/view?usp=sharing) [百度网盘](https://pan.baidu.com/s/1fqtxJyXSgUx-gE3rieuKxg?pwd=udr1)
+## Tier 1: Core Product Features (Most Important)
 
-4.17 - 2024.05.24 | [Google Drive](https://drive.google.com/file/d/1962p_lEWo_kLTEynarNaRYRNVdaiQG2k/view?usp=share_link) [百度网盘](https://pan.baidu.com/s/1bMzTYoJKZXsoxuSBmzj6VQ?pwd=as37) : Add gram loss from [FILM](https://github.com/google-research/frame-interpolation/blob/69f8708f08e62c2edf46a27616a4bfcf083e2076/losses/vgg19_loss.py) || [4.17.lite](https://drive.google.com/file/d/1e9Qb4rm20UAsO7h9VILDwrpvTSHWWW8b/view?usp=share_link)
+  - Multi-pipeline app with dedicated tabs for SeedVR2, GAN, RIFE, FlashVSR+, Face Restoration, Resolution/Scene Split,
+Output/Comparison, Queue, and Health.
+- SeedVR2 upscaling for video, single image, and frame-folder inputs.
+- SeedVR2 first-frame preview mode.
+- SeedVR2 model selection with metadata-aware defaults and constraints.
+- SeedVR2 advanced memory/performance controls: offloading, BlockSwap, VAE tiling, compile options, attention backend
+selection, model caching toggles.
+- GAN upscaling pipeline for images, videos, and frame-sequence folders.
+- GAN model metadata system (Real-ESRGAN + Open Model Database + spandrel-based detection fallback).
+- RIFE interpolation pipeline with model selection, multiplier/target FPS modes, spatial scale, precision controls,
+static-frame skip, recursion depth.
+- FlashVSR+ diffusion upscaling pipeline with version/mode/scale selection and VRAM-aware modes.
+- FlashVSR memory controls: VAE/DiT tiling, tile size/overlap, unload DiT before decode.
+- Face Restoration as both standalone processor and integrated post-processing across pipelines.
+- Global face restoration enable + global strength control from Global Settings.
+- Unified cross-model resolution strategy: Upscale-x, max-edge cap, and pre-downscale-then-upscale behavior.
 
-4.15 - 2024.03.11 | [Google Drive](https://drive.google.com/file/d/1xlem7cfKoMaiLzjoeum8KIQTYO-9iqG5/view?usp=sharing) [百度网盘](https://pan.baidu.com/s/1IGNIX7JXGUwI_tfoafYHqA?pwd=bg0b) || [4.15.lite](https://drive.google.com/file/d/1BoOF-qSEnTPDjpKG1sBTa6k7Sv5_-k7z/view?usp=sharing) || 4.14 - 2024.01.08 | [Google Drive](https://drive.google.com/file/d/1BjuEY7CHZv1wzmwXSQP9ZTj0mLWu_4xy/view?usp=share_link) [百度网盘](https://pan.baidu.com/s/1d-W64lRsJTqNsgWoXYiaWQ?pwd=xawa) || [4.14.lite](https://drive.google.com/file/d/1eULia_onOtRXHMAW9VeDL8N2_7z8J1ba/view?usp=share_link)
+##  Tier 2: Output, Encoding, and Comparison
 
-v4.9.2 - 2023.11.01 | [Google Drive](https://drive.google.com/file/d/1UssCvbL8N-ty0xIKM5G5ZTEgp9o4w3hp/view?usp=sharing) [百度网盘](https://pan.baidu.com/s/18cbx3EP4HWgSa1vkcXvvyw?pwd=swr9) || v4.3 - 2022.8.17 | [Google Drive](https://drive.google.com/file/d/1xrNofTGMHdt9sQv7-EOG0EChl8hZW_cU/view?usp=sharing) [百度网盘](https://pan.baidu.com/s/12AUAeZLZf5E1_Zx6WkS3xw?pwd=q83a) 
+  - Output format controls: auto/mp4/png and PNG-sequence toggles.
+- Video encoding controls: codec, pixel format, CRF quality, preset speed.
+- Audio controls: copy/re-encode/remove plus bitrate.
+- Two-pass encoding option.
+- FPS override support.
+- Global RIFE post-process for all upscaler outputs (multiplier, model, precision, CUDA device).
+- Chunk-safe Global RIFE mode (process per chunk before merge).
+- Comparison mode selector: native/slider/side-by-side/overlay-style options.
+- Image comparison and custom HTML video comparison slider outputs.
+- Generated input-vs-output comparison video (auto/horizontal/vertical layout).
+- Direct “compare any 2 videos” tool with fullscreen-capable slider UI.
+- Pin/unpin reference frame for iterative comparisons across runs.
+- Fullscreen and zoom-oriented comparison preferences.
+- Metadata/telemetry settings exposed in Output tab.
 
-v3.8 - 2021.6.17 | [Google Drive](https://drive.google.com/file/d/1O5KfS3KzZCY3imeCr2LCsntLhutKuAqj/view?usp=sharing) [百度网盘](https://pan.baidu.com/s/1X-jpWBZWe-IQBoNAsxo2mA?pwd=kxr3) || v3.1 - 2021.5.17 | [Google Drive](https://drive.google.com/file/d/1xn4R3TQyFhtMXN2pa3lRB8cd4E1zckQe/view?usp=sharing) [百度网盘](https://pan.baidu.com/s/1W4p_Ni04HLI_jTy45sVodA?pwd=64bz) 
+##   Tier 3: Scale, Throughput, and Long-Run Processing
 
-[More Older Version](https://github.com/megvii-research/ECCV2022-RIFE/issues/41)
+  - Universal PySceneDetect-based chunking for all major pipelines.
+- Static chunking fallback (fixed seconds + overlap).
+- Frame-accurate split option (lossless path) vs fast keyframe-based split path.
+- Per-chunk cleanup option to save disk.
+- SeedVR2 native streaming chunk mode (frame-count chunks) in addition to universal chunking.
+- Resume interrupted chunk runs from partial outputs.
+- Batch processing in SeedVR2, GAN, RIFE, FlashVSR+, and Face standalone flow.
+- Batch overwrite/skip behavior controls.
+- Per-item batch output folder organization and run-dir management.
+- Application-level FIFO processing queue across tabs (single active job, waiting jobs).
+- Queue monitor tab with refresh, delete selected waiting jobs, and clear-all waiting.
+- Queue snapshot isolation so queued jobs run with their captured settings.
+- Queue-disabled mode option to ignore extra clicks while busy.
 
-### Installation
-python <= 3.11
-```
-git clone git@github.com:hzwer/Practical-RIFE.git
-cd Practical-RIFE
-pip3 install -r requirements.txt
-```
-Download a model from the model list and put *.py and flownet.pkl on train_log/
-### Run
+##  Tier 4: Universal preset system that stores all tab settings in one preset file.
+- Auto-load last-used universal preset at startup.
+- Shared-state sync so loading one preset propagates to all tabs.
+- Per-tab model-context presets still supported (save/load/delete/last-used).
+- Preset migration/backward compatibility and auto-merge with new defaults.
+- Preset guardrails (auto-corrections for invalid combos).
+- Global settings persistence (global.json) for output/temp/telemetry/queue/mode/model-cache paths.
+- Named global config profiles (save/load/delete) in Global Settings.
 
-You can use our [demo video](https://drive.google.com/file/d/1i3xlKb7ax7Y70khcTcuePi6E7crO_dFc/view?usp=sharing) or your video. 
-```
-python3 inference_video.py --multi=2 --video=video.mp4 
-```
-(generate video_2X_xxfps.mp4)
-```
-python3 inference_video.py --multi=4 --video=video.mp4
-```
-(for 4X interpolation)
-```
-python3 inference_video.py --multi=2 --video=video.mp4 --scale=0.5
-```
-(If your video has high resolution, such as 4K, we recommend set --scale=0.5 (default 1.0))
-```
-python3 inference_video.py --multi=4 --img=input/
-```
-(to read video from pngs, like input/0.png ... input/612.png, ensure that the png names are numbers)
+##   Tier 5: Reliability, Safety, and Recovery
+- Default subprocess execution mode with strong cancellation and cleanup behavior.
+- Confirm-cancel safety checkbox in processing tabs.
+- VRAM OOM detection and prominent OOM alert banner with remediation guidance.
+- Best-effort salvage of partial outputs on cancellation/failure.
+- Collision-safe output naming to avoid overwrite.
+- Structured per-run metadata and telemetry logging.
+- Command logging for executed processing commands and failures.
+- Input/settings validation guardrails (batch-size constraints, tile overlap constraints, GPU spec validation,
+compatibility checks).
+- Automatic ffmpeg-related checks and fallbacks in multiple paths.
+- Audio preservation/replacement utilities for merged/chunked outputs.
 
-Parameter descriptions:
+##   Tier 6: System Diagnostics and Environment Control
 
---img / --video: The input file address
+  - Health checks for ffmpeg, CUDA, VS Build Tools, writable dirs, and disk space.
+- Gradio compatibility and source scan reporting.
+- Repository scan for bundled external components (SeedVR2, Real-ESRGAN, Open Model Database).
+- GPU detection utilities designed to avoid unwanted parent-process CUDA context allocation.
+- Model discovery registries for SeedVR2/RIFE/FlashVSR/GAN.
+- Launcher environment variable integration (TEMP/TMP, MODELS_DIR, HF_HOME, TRANSFORMERS_CACHE, HF_DATASETS_CACHE).
+- Editable model cache path controls in Global Settings with restart guidance.
 
---output: Output video name 'xxx.mp4'
+##   Tier 7: UX and Operational Convenience (Least Important)
 
---model: Directory with trained model files
-
---UHD: It is equivalent to setting scale=0.5
-
---montage: Splice the generated video with the original video, like [this demo](https://www.youtube.com/watch?v=kUQ7KK6MhHw)
-
---fps: Set output FPS manually
-
---ext: Set output video format, default: mp4
-
---multi: Interpolation frame rate multiplier
-
---exp: Set --multi to 2^(--exp)
-
---skip: It's no longer useful refer to [issue 207](https://github.com/hzwer/ECCV2022-RIFE/issues/207)
-
-
-### Model training
-The whole repo can be downloaded from [v4.0](https://drive.google.com/file/d/1zoSz7b8c6kUsnd4gYZ_6TrKxa7ghHJWW/view?usp=sharing), [v4.12](https://drive.google.com/file/d/1IHB35zhO4rr-JSMnpRvHhU9U65Z4giWv/view?usp=sharing), [v4.15](https://drive.google.com/file/d/19sUMZ-6H7g_hYDjTcqxYu9kE7TqnfS3k/view?usp=sharing), [v4.18](https://drive.google.com/file/d/1g8D2foww7DhGLIxtaDLr9fU3y-ByOw4B/view?usp=share_link), [v4.25](https://drive.google.com/file/d/1_l4OgBp3GrrHOcQB87xXCI7OtTzyeXZL/view?usp=share_link). However, we currently do not have the time to organize them well, they are for reference only.
-
-## Video Enhancement
-
-<img width="710" alt="image" src="https://github.com/hzwer/Practical-RIFE/assets/10103856/5bae134c-0747-4084-bbab-37b1595352f1">
-
-We are developing a practical model of [SAFA](https://github.com/megvii-research/WACV2024-SAFA). Welcome to check its [demo](https://www.youtube.com/watch?v=QII2KQSBBwk) ([BiliBili](https://www.bilibili.com/video/BV1Up4y1d7kF/)) and provide advice.
-
-v0.5 - 2023.12.26 | [Google Drive](https://drive.google.com/file/d/1OLO9hLV97ZQ4uRV2-aQqgnwhbKMMt6TX/view?usp=sharing)
-
-```
-python3 inference_video_enhance.py --video=demo.mp4
-```
-
-## Citation
-
-```
-@inproceedings{huang2022rife,
-  title={Real-Time Intermediate Flow Estimation for Video Frame Interpolation},
-  author={Huang, Zhewei and Zhang, Tianyuan and Heng, Wen and Shi, Boxin and Zhou, Shuchang},
-  booktitle={Proceedings of the European Conference on Computer Vision (ECCV)},
-  year={2022}
-}
-```
-```
-@inproceedings{huang2024safa,
-  title={Scale-Adaptive Feature Aggregation for Efficient Space-Time Video Super-Resolution},
-  author={Huang, Zhewei and Huang, Ailin and Hu, Xiaotao and Hu, Chen and Xu, Jun and Zhou, Shuchang},
-  booktitle={Winter Conference on Applications of Computer Vision (WACV)},
-  year={2024}
-}
-```
-
-## Reference
-
-Optical Flow:
-[ARFlow](https://github.com/lliuz/ARFlow)  [pytorch-liteflownet](https://github.com/sniklaus/pytorch-liteflownet)  [RAFT](https://github.com/princeton-vl/RAFT)  [pytorch-PWCNet](https://github.com/sniklaus/pytorch-pwc)
-
-Video Interpolation: 
-[DVF](https://github.com/lxx1991/pytorch-voxel-flow)  [TOflow](https://github.com/Coldog2333/pytoflow)  [SepConv](https://github.com/sniklaus/sepconv-slomo)  [DAIN](https://github.com/baowenbo/DAIN)  [CAIN](https://github.com/myungsub/CAIN)  [MEMC-Net](https://github.com/baowenbo/MEMC-Net)   [SoftSplat](https://github.com/sniklaus/softmax-splatting)  [BMBC](https://github.com/JunHeum/BMBC)  [EDSC](https://github.com/Xianhang/EDSC-pytorch)  [EQVI](https://github.com/lyh-18/EQVI) [RIFE](https://github.com/hzwer/arXiv2020-RIFE)
+  - File upload plus manual path entry in all major tabs.
+- Auto media preview (image/video) in tabs.
+- Input auto-detection (video/image/frame sequence/directory) with diagnostics.
+- Missing-frame detection for frame-sequence inputs.
+- Resolution calculator and chunk estimator panels with disk-space warnings.
+- “Use SeedVR2 input” quick-link from Resolution tab.
+- Open output folder and clear temp-folder actions from tabs.
+- Live progress indicators, chunk progress text, and ETA/status messaging.
+- SeedVR2 model status panel with refresh and auto-refresh.
+- Manual CUDA cache clear actions from UI.
+- --share launch flag support for Gradio sharing.
