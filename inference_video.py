@@ -90,6 +90,8 @@ parser.add_argument('--scale', dest='scale', type=float, default=1.0, help='Try 
 parser.add_argument('--skip', dest='skip', action='store_true', help='whether to remove static frames before processing')
 parser.add_argument('--fps', dest='fps', type=float, default=None)
 parser.add_argument('--png', dest='png', action='store_true', help='whether to output png format frames')
+parser.add_argument('--sequence-format', dest='sequence_format', type=str, default='png', choices=['png', 'jpg', 'jpeg'], help='sequence image format when --png is enabled')
+parser.add_argument('--jpg-quality', dest='jpg_quality', type=int, default=95, help='JPEG quality (1-100) for JPG sequence output')
 parser.add_argument('--ext', dest='ext', type=str, default='mp4', help='output video extension')
 parser.add_argument('--exp', dest='exp', type=int, default=1)
 parser.add_argument('--multi', dest='multi', type=int, default=2)
@@ -117,6 +119,10 @@ if args.UHD and args.scale == 1.0:
 assert args.scale in [0.25, 0.5, 1.0, 2.0, 4.0]
 if args.img is not None:
     args.png = True
+args.sequence_format = str(args.sequence_format or 'png').strip().lower()
+if args.sequence_format == 'jpeg':
+    args.sequence_format = 'jpg'
+args.jpg_quality = max(1, min(100, int(args.jpg_quality or 95)))
 
 # Set ffmpeg output flag
 show_ffmpeg_output = args.show_ffmpeg
@@ -237,6 +243,7 @@ else:
 
 h, w, _ = lastframe.shape
 vid_out_name = None
+sequence_output_dir = 'vid_out'
 ffmpeg_process = None  # This will be used for video saving
 
 # =============================================================================
@@ -249,7 +256,13 @@ def clear_write_buffer(user_args, write_buffer, ffmpeg_proc=None):
         if item is None:
             break
         if user_args.png:
-            cv2.imwrite('vid_out/{:0>7d}.png'.format(cnt), item[:, :, ::-1])
+            frame_ext = '.jpg' if user_args.sequence_format == 'jpg' else '.png'
+            frame_path = os.path.join(sequence_output_dir, '{:0>7d}{}'.format(cnt, frame_ext))
+            frame_bgr = item[:, :, ::-1]
+            if user_args.sequence_format == 'jpg':
+                cv2.imwrite(frame_path, frame_bgr, [cv2.IMWRITE_JPEG_QUALITY, int(user_args.jpg_quality)])
+            else:
+                cv2.imwrite(frame_path, frame_bgr)
             cnt += 1
         else:
             # Convert from RGB to BGR and write raw bytes to ffmpeg.
@@ -324,9 +337,14 @@ def make_inference(I0, I1, n, current_frame):
 # Prepare output video settings
 # =============================================================================
 if args.png:
-    if not os.path.exists('vid_out'):
-        os.mkdir('vid_out')
-    print("[INFO] Output format: PNG sequence in 'vid_out' directory")
+    if args.output is not None:
+        sequence_output_dir = args.output
+    if not os.path.exists(sequence_output_dir):
+        os.makedirs(sequence_output_dir, exist_ok=True)
+    if args.sequence_format == 'jpg':
+        print(f"[INFO] Output format: JPG sequence in '{sequence_output_dir}' directory (quality={args.jpg_quality})")
+    else:
+        print(f"[INFO] Output format: PNG sequence in '{sequence_output_dir}' directory")
 else:
     print("Setting up FFmpeg encoder...", end="")
     sys.stdout.flush()
@@ -722,4 +740,8 @@ if should_transfer_audio:
         # else: # If transferAudio failed before renaming, vid_out_name should still be the correct one
         #    pass
         
-print(f"\n[DONE] Completed video saved to: {vid_out_name}")
+if args.png:
+    sequence_label = "JPG" if args.sequence_format == "jpg" else "PNG"
+    print(f"\n[DONE] Completed {sequence_label} sequence saved to: {sequence_output_dir}")
+else:
+    print(f"\n[DONE] Completed video saved to: {vid_out_name}")

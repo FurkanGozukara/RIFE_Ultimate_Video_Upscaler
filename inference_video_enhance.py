@@ -60,12 +60,18 @@ parser.add_argument('--img', dest='img', type=str, default=None)
 parser.add_argument('--model', dest='modelDir', type=str, default='train_log_SAFA', help='directory with trained model files')
 parser.add_argument('--fp16', dest='fp16', action='store_true', help='fp16 mode for faster and more lightweight inference on cards with Tensor Cores')
 parser.add_argument('--png', dest='png', action='store_true', help='whether to vid_out png format vid_outs')
+parser.add_argument('--sequence-format', dest='sequence_format', type=str, default='png', choices=['png', 'jpg', 'jpeg'], help='sequence image format when --png is enabled')
+parser.add_argument('--jpg-quality', dest='jpg_quality', type=int, default=95, help='JPEG quality (1-100) for JPG sequence output')
 parser.add_argument('--ext', dest='ext', type=str, default='mp4', help='vid_out video extension')
 
 args = parser.parse_args()
 assert (not args.video is None or not args.img is None)
 if not args.img is None:
     args.png = True
+args.sequence_format = str(args.sequence_format or 'png').strip().lower()
+if args.sequence_format == 'jpeg':
+    args.sequence_format = 'jpg'
+args.jpg_quality = max(1, min(100, int(args.jpg_quality or 95)))
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 torch.set_grad_enabled(False)
@@ -113,10 +119,13 @@ else:
 h, w, _ = lastframe.shape
 
 vid_out_name = None
+sequence_output_dir = 'vid_out'
 vid_out = None
 if args.png:
-    if not os.path.exists('vid_out'):
-        os.mkdir('vid_out')
+    if args.output is not None:
+        sequence_output_dir = args.output
+    if not os.path.exists(sequence_output_dir):
+        os.makedirs(sequence_output_dir, exist_ok=True)
 else:
     if args.output is not None:
         vid_out_name = args.output
@@ -131,7 +140,13 @@ def clear_write_buffer(user_args, write_buffer):
         if item is None:
             break
         if user_args.png:
-            cv2.imwrite('vid_out/{:0>7d}.png'.format(cnt), item[:, :, ::-1])
+            frame_ext = '.jpg' if user_args.sequence_format == 'jpg' else '.png'
+            frame_path = os.path.join(sequence_output_dir, '{:0>7d}{}'.format(cnt, frame_ext))
+            frame_bgr = item[:, :, ::-1]
+            if user_args.sequence_format == 'jpg':
+                cv2.imwrite(frame_path, frame_bgr, [cv2.IMWRITE_JPEG_QUALITY, int(user_args.jpg_quality)])
+            else:
+                cv2.imwrite(frame_path, frame_bgr)
             cnt += 1
         else:
             vid_out.write(item[:, :, ::-1])
@@ -199,3 +214,9 @@ if args.png == False and fpsNotAssigned == True and not args.video is None:
         print("Audio transfer failed. Interpolated video will have no audio")
         targetNoAudio = os.path.splitext(vid_out_name)[0] + "_noaudio" + os.path.splitext(vid_out_name)[1]
         os.rename(targetNoAudio, vid_out_name)
+
+if args.png:
+    sequence_label = "JPG" if args.sequence_format == "jpg" else "PNG"
+    print(f"\n[DONE] Completed {sequence_label} sequence saved to: {sequence_output_dir}")
+else:
+    print(f"\n[DONE] Completed video saved to: {vid_out_name}")
