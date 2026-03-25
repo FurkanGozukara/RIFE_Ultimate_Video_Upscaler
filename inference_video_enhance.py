@@ -3,6 +3,7 @@ import cv2
 import torch
 import argparse
 import numpy as np
+import re
 from tqdm import tqdm
 from torch.nn import functional as F
 import warnings
@@ -12,6 +13,55 @@ from queue import Queue, Empty
 from model.pytorch_msssim import ssim_matlab
 
 warnings.filterwarnings("ignore")
+
+_IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".bmp", ".tiff", ".tif", ".webp"}
+
+
+def _natural_name_key(name):
+    parts = re.split(r"(\d+)", str(name or "").casefold())
+    return tuple(
+        (0, int(part)) if part.isdigit() else (1, part)
+        for part in parts
+        if part != ""
+    )
+
+
+def _sorted_image_filenames(folder):
+    names = []
+    try:
+        for item in os.listdir(folder):
+            if os.path.splitext(item)[1].lower() in _IMAGE_EXTENSIONS:
+                names.append(item)
+    except Exception:
+        return []
+
+    names.sort(key=lambda item: (_natural_name_key(item), str(item).casefold(), str(item)))
+    return names
+
+
+def _prepare_image_sequence(folder):
+    sequence_names = _sorted_image_filenames(folder)
+    if not sequence_names:
+        raise RuntimeError(f"No supported image files found in folder: {folder}")
+
+    first_frame = None
+    remaining = []
+
+    for frame_name in sequence_names:
+        frame_bgr = cv2.imread(os.path.join(folder, frame_name), cv2.IMREAD_UNCHANGED)
+        if frame_bgr is None:
+            print(f"[WARN] Skipping unreadable input frame: {frame_name}")
+            continue
+        frame_rgb = frame_bgr[:, :, ::-1].copy()
+        if first_frame is None:
+            first_frame = frame_rgb
+        else:
+            remaining.append(frame_name)
+
+    if first_frame is None:
+        raise RuntimeError(f"No readable image frames found in folder: {folder}")
+
+    return remaining, first_frame, len(remaining) + 1
 
 def transferAudio(sourceVideo, targetVideo):
     import shutil
@@ -107,14 +157,7 @@ if not args.video is None:
     else:
         print("Will not merge audio because using png or fps flag!")
 else:
-    videogen = []
-    for f in os.listdir(args.img):
-        if 'png' in f:
-            videogen.append(f)
-    tot_frame = len(videogen)
-    videogen.sort(key= lambda x:int(x[:-4]))
-    lastframe = cv2.imread(os.path.join(args.img, videogen[0]), cv2.IMREAD_UNCHANGED)[:, :, ::-1].copy()
-    videogen = videogen[1:]
+    videogen, lastframe, tot_frame = _prepare_image_sequence(args.img)
 
 h, w, _ = lastframe.shape
 
@@ -154,7 +197,11 @@ def clear_write_buffer(user_args, write_buffer):
 def build_read_buffer(user_args, read_buffer, videogen):
     for frame in videogen:
         if not user_args.img is None:
-            frame = cv2.imread(os.path.join(user_args.img, frame), cv2.IMREAD_UNCHANGED)[:, :, ::-1].copy()
+            frame_bgr = cv2.imread(os.path.join(user_args.img, frame), cv2.IMREAD_UNCHANGED)
+            if frame_bgr is None:
+                print(f"[WARN] Skipping unreadable input frame: {frame}")
+                continue
+            frame = frame_bgr[:, :, ::-1].copy()
         # if user_args.montage:
         #    frame = frame[:, left: left + w]
         read_buffer.put(frame)
