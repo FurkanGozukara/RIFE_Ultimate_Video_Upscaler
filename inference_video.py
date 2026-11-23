@@ -237,6 +237,57 @@ def apply_codec_tuning(ffmpeg_cmd):
         )
 
 
+# SECourses app (V10.5+): the FFmpeg video arguments the app resolved for this run, a JSON list from -c:v on
+# (NVIDIA NVENC checked for this video, or the Output tab's custom FFmpeg video arguments). When present they
+# replace --video-codec / --video-preset / --video-crf / --pixel-format and the codec tuning.
+APP_VIDEO_ARGS_ENV = "SECOURSES_FFMPEG_VIDEO_ARGS"
+
+
+def _app_video_args():
+    raw = str(os.environ.get(APP_VIDEO_ARGS_ENV, "") or "").strip()
+    if not raw:
+        return None
+    try:
+        value = json.loads(raw)
+    except Exception:
+        print(f"[WARN] Ignoring {APP_VIDEO_ARGS_ENV}: not a JSON list")
+        return None
+    if isinstance(value, list) and value and all(isinstance(v, str) for v in value):
+        return value
+    return None
+
+
+app_video_args = _app_video_args()
+
+
+def video_encode_args(filter_args=None):
+    """Encoder arguments (after the input): the app's arguments, else codec / preset / CRF / pixel format.
+
+    filter_args: a ['-vf', chain] colour conversion; a -vf / -filter:v of the app's arguments runs after it."""
+    filter_args = list(filter_args or [])
+    if not app_video_args:
+        cmd = filter_args + ['-c:v', args.video_codec, '-preset', args.video_preset, '-crf', str(args.video_crf),
+                             '-pix_fmt', args.pixel_format]
+        apply_codec_tuning(cmd)
+        return cmd
+    own = list(app_video_args)
+    chains = []
+    i = 0
+    while i < len(own) - 1:
+        if own[i].lower() in ('-vf', '-filter:v'):
+            chains.append(own[i + 1])
+            del own[i:i + 2]
+            continue
+        i += 1
+    if chains:
+        if '-vf' in filter_args:
+            j = filter_args.index('-vf') + 1
+            filter_args[j] = ','.join([filter_args[j]] + chains)
+        else:
+            filter_args = ['-vf', ','.join(chains)]
+    return filter_args + own
+
+
 def snap_rate(value):
     """Exact rational for a frame rate typed as a float (60 -> 60/1, 59.94 -> 60000/1001)."""
     value = float(value)
@@ -770,11 +821,14 @@ else:
     # Exact mode writes the target rate directly; the legacy path writes fps * multi first.
     actual_high_fps = float(out_rate)
     print(f" Initial encoding to: {os.path.basename(vid_out_name_temp_highfps)} [{w}x{h}@{actual_high_fps:.3f}fps]")
-    print(
-        f"[INFO] Encoder settings: codec={args.video_codec}, preset={args.video_preset}, "
-        f"crf={args.video_crf}, pix_fmt={args.pixel_format}, h265_tune={args.h265_tune}, "
-        f"av1_film_grain={args.av1_film_grain}, av1_film_grain_denoise={int(args.av1_film_grain_denoise)}"
-    )
+    if app_video_args:
+        print(f"[INFO] Encoder settings (from the app): {' '.join(app_video_args)}")
+    else:
+        print(
+            f"[INFO] Encoder settings: codec={args.video_codec}, preset={args.video_preset}, "
+            f"crf={args.video_crf}, pix_fmt={args.pixel_format}, h265_tune={args.h265_tune}, "
+            f"av1_film_grain={args.av1_film_grain}, av1_film_grain_denoise={int(args.av1_film_grain_denoise)}"
+        )
 
     # First ffmpeg command: Encode raw frames to high-FPS intermediate file
     ffmpeg_cmd_1 = [
@@ -786,13 +840,8 @@ else:
         '-r', rate_text(out_rate),  # exact rational output rate for the input pipe
         '-i', '-',  # input from pipe
         '-an', # No audio for this intermediate step
-        *(color_encode_args(probe) if (args.video is not None and not args.montage) else []),
-        '-c:v', args.video_codec,
-        '-preset', args.video_preset,
-        '-crf', str(args.video_crf),
-        '-pix_fmt', args.pixel_format,
+        *video_encode_args(color_encode_args(probe) if (args.video is not None and not args.montage) else []),
     ]
-    apply_codec_tuning(ffmpeg_cmd_1)
     ffmpeg_cmd_1.append(vid_out_name_temp_highfps) # Output to temporary high-FPS file
     # Use DEVNULL for stdout/stderr if not showing FFmpeg output
     ffmpeg_stdout = None if show_ffmpeg_output else subprocess.DEVNULL
@@ -1287,13 +1336,9 @@ if not args.png:
                 'ffmpeg', '-y',
                 '-i', vid_out_name_temp_highfps, # Input is the high-FPS temp file
                 '-r', str(target_fps), # Apply the target frame rate (exact value)
-                '-c:v', args.video_codec,
-                '-preset', args.video_preset,
-                '-crf', str(args.video_crf),
-                '-pix_fmt', args.pixel_format,
+                *video_encode_args(),
                 '-an', # No audio yet
             ]
-            apply_codec_tuning(ffmpeg_cmd_2)
             ffmpeg_cmd_2.append(vid_out_name) # Output to the final video name
             re_encode_successful = False
             try:
